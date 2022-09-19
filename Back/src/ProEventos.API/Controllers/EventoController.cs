@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProEventos.API.Models;
+using ProEventos.API.Data;
 
 namespace ProEventos.API.Controllers
 {
@@ -13,6 +14,8 @@ namespace ProEventos.API.Controllers
     public class EventoController : ControllerBase
     {
 
+       
+        /*
         public IEnumerable<Evento> _evento = new Evento[]{
             new Evento(){
                 EventoId = 1,
@@ -33,21 +36,24 @@ namespace ProEventos.API.Controllers
                 ImagemURL = "foto1.png"
             }                
         };
+        */
+        private readonly DataContext context;
         
-        public EventoController()
+        public EventoController(DataContext context)
         {            
+            this.context = context;           
         }
 
         [HttpGet]
         public IEnumerable<Evento> Get()
         {
-            return _evento;             
+            return context.Eventos;             
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Evento> GetById(int id)
+        public Evento GetById(int id)
         {
-            return _evento.Where(e => e.EventoId == id);             
+            return context.Eventos.FirstOrDefault(e => e.EventoId == id);             
         }
 
         [HttpPost]
