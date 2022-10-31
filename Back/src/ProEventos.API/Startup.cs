@@ -11,8 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ProEventos.API.Data;
+using ProEventos.Persistence;
 using Microsoft.EntityFrameworkCore;
+using ProEventos.Persistence.Contextos;
+using ProEventos.Persistence.Contratos;
+using ProEventos.Application.Contratos;
+using ProEventos.Application;
 
 namespace ProEventos.API
 {
@@ -29,11 +33,19 @@ namespace ProEventos.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<ProEventosContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
-            );
+            );           
 
-            services.AddControllers();
+            //Ignorar o loop - resolver a erro de cycle quando temos entidade filha com o Id do pai
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            //Serviços são inseridos aqui
+            services.AddScoped<IGeralPersist, GeralPersist>();
+            services.AddScoped<IEventosPersist, EventoPersist>();
+            services.AddScoped<IEventoService, EventoService>();
+
+
             services.AddCors();
             services.AddSwaggerGen(c =>
             {
