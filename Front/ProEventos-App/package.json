@@ -21,6 +21,8 @@
     "@fortawesome/fontawesome-free": "^6.2.0",
     "bootstrap": "^4.6.2",
     "ngx-bootstrap": "^9.0.0",
+    "ngx-spinner": "^14.0.0",
+    "ngx-toastr": "^15.2.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -30,12 +32,18 @@
     "@angular/cli": "~14.1.2",
     "@angular/compiler-cli": "^14.1.0",
     "@types/jasmine": "~4.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "eslint": "^8.27.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.0",
+    "eslint-plugin-promise": "^6.1.1",
     "jasmine-core": "~4.2.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.7.2"
+    "typescript": "^4.8.4"
   }
 }
