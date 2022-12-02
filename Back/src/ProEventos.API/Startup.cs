@@ -17,7 +17,7 @@ using ProEventos.Persistence.Contextos;
 using ProEventos.Persistence.Contratos;
 using ProEventos.Application.Contratos;
 using ProEventos.Application;
-
+using AutoMapper;
 namespace ProEventos.API
 {
     public class Startup
@@ -39,6 +39,8 @@ namespace ProEventos.API
 
             //Ignorar o loop - resolver a erro de cycle quando temos entidade filha com o Id do pai
             services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //Serviços são inseridos aqui
             services.AddScoped<IGeralPersist, GeralPersist>();
