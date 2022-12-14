@@ -20,6 +20,8 @@ export class EventoListaComponent implements OnInit {
   public marginImg: number = 2;
   public showImg: boolean = true;
   private _filtroLista: string = "";
+  public temaMsg: string = "";
+  public eventoId: number = 0;
 
   public get filtroLista(): string{
     return this._filtroLista;
@@ -47,14 +49,14 @@ export class EventoListaComponent implements OnInit {
   public ngOnInit(): void {
     /** spinner starts on init */
     this.spinner.show();
-    this.getEventos();            
+    this.carregarEventos();            
   }
 
-  public getEventos(): void{
+  public carregarEventos(): void{
     this.eventoService.getEventos().subscribe({
-      next: ((eventos: Evento[]) => {
+      next: ((eventos: Evento[]) => {        
         this.eventos = eventos;
-        this.eventosFiltrados = this.eventos        
+        this.eventosFiltrados = this.eventos
       }),
       error: ((error) => {
         this.toastr.error('Erro ao carregar os eventos.', 'Erro!');
@@ -69,18 +71,39 @@ export class EventoListaComponent implements OnInit {
   }
 
 
-  public openModal(template: TemplateRef<any>): void {
+  public openModal(template: TemplateRef<any>, e: Event, temaMsg: string, id: number): void {
+    e.stopPropagation();
+    this.temaMsg = temaMsg;
+    this.eventoId = id;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
  
   public confirm(): void {  
-    console.log("Sim")  
-    this.showSuccess()
     this.modalRef?.hide();
+    this.spinner.show();
+
+    this.eventoService.deleteEvento(this.eventoId).subscribe({
+      next: (result: string) => {
+          //console.log(result);
+          this.spinner.hide();
+          this.showSuccess();
+          this.carregarEventos();
+        
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.spinner.hide();
+        this.toastr.error(`Erro ao tentar excluir o evento ${this.temaMsg}`, "Erro");
+      },
+      complete:() => {
+        this.spinner.hide();
+      }
+    });       
+   
   }
  
   public decline(): void {  
-    console.log("Não")   
+   
     this.modalRef?.hide();
   }
 

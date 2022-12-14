@@ -133,9 +133,9 @@ namespace ProEventos.API.Controllers
         public async Task<IActionResult> Delete(int id){
             try
             {
-                return await eventoService.DeleteEvento(id) ? 
-                    Ok("Deletado"): 
-                    throw new Exception("Ocorreu um problema não específico ao tentar deletar o evento");
+                return await eventoService.DeleteEvento(id) 
+                    ? Ok(new { message = "Deletado"})
+                    : throw new Exception("Ocorreu um problema não específico ao tentar deletar o evento");
                     //BadRequest("Evento não deletado");                
 
             }
