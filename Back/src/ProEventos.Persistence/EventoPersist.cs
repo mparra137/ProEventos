@@ -9,7 +9,7 @@ using ProEventos.Persistence.Contratos;
 
 namespace ProEventos.Persistence
 {
-    public class EventoPersist : IEventosPersist
+    public class EventoPersist : IEventoPersist
     {
         private readonly ProEventosContext context;
         

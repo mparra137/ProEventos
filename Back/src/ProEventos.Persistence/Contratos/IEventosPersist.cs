@@ -6,7 +6,7 @@ using ProEventos.Domain;
 
 namespace ProEventos.Persistence.Contratos
 {
-    public interface IEventosPersist
+    public interface IEventoPersist
     {       
         //EVENTOS
         Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false);

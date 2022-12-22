@@ -9,8 +9,8 @@ import { CollapseModule} from 'ngx-bootstrap/collapse'
 import { TooltipModule } from 'ngx-bootstrap/tooltip' 
 import { BsDropdownModule} from 'ngx-bootstrap/dropdown'
 import { ModalModule } from  'ngx-bootstrap/modal'
-
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
+import { NgxCurrencyModule } from 'ngx-currency';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
@@ -25,6 +25,8 @@ import { PalestrantesComponent } from './components/palestrantes/palestrantes.co
 import { NavComponent } from './shared/nav/nav.component';
 
 import { EventoService } from './services/evento.service';
+import { LoteService } from './services/lote.service';
+
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { TituloComponent } from './shared/titulo/titulo.component';
 import { ContatosComponent } from './components/contatos/contatos.component';
@@ -55,7 +57,7 @@ defineLocale('pt-br', ptBrLocale);
     RegistrationComponent
    ],
   imports: [
-    BrowserModule,
+    BrowserModule,    
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -72,9 +74,11 @@ defineLocale('pt-br', ptBrLocale);
     }),
     NgxSpinnerModule,
     ReactiveFormsModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxCurrencyModule  
+    
   ],
-  providers: [EventoService],
+  providers: [EventoService, LoteService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
