@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Lote } from '@app/models/Lote';
 import { LoteService } from '@app/services/lote.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-evento-detalhe',
@@ -24,7 +25,8 @@ export class EventoDetalheComponent implements OnInit {
   public evento = {} as Evento;
   private estadoSalvar: string = 'post';
   public loteAtual: any = {id: 0, nome: '', indice: 0};
-  
+  public imagemURL: string = "assets/upload.png";
+  public file!: File;
 
   constructor(private fb: FormBuilder, 
               private localeService: BsLocaleService, 
@@ -86,7 +88,10 @@ export class EventoDetalheComponent implements OnInit {
       this.eventoService.getEventoById(this.eventoId).subscribe({
         next: (evento: Evento) => {
           this.evento = {...evento};
-          this.form.patchValue(this.evento);          
+          this.form.patchValue(this.evento);    
+          
+          if (this.evento.imagemURL !== '')
+            this.imagemURL = environment.apiURL + 'resources/images/' + this.evento.imagemURL;
 
           this.evento.lotes?.forEach((lote: Lote) => {
              this.lotes.push(this.criarLote(lote));
@@ -110,7 +115,7 @@ export class EventoDetalheComponent implements OnInit {
       local: ['', [Validators.required]],
       dataEvento: ['', [Validators.required]],
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
-      imagemURL : ['', [Validators.required]],
+      imagemURL : [''],
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', [Validators.required]],
       lotes: this.fb.array([])
@@ -226,5 +231,31 @@ export class EventoDetalheComponent implements OnInit {
 
   public retornaNomeLote(nome: string) : string{
       return nome === null || nome === ''? 'Nome do Lote' : nome;
+  }
+
+  public onFileChange(event: any){
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => this.imagemURL = event.target.result;
+
+    this.file = event.target?.files;
+    reader.readAsDataURL(this.file[0])
+
+    this.uploadImagem();
+  }
+
+  public uploadImagem(): void{
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe({
+      next: () => {
+        
+        this.carregarEvento();
+        this.toastr.success('Upload da imagem realizad com sucesso.', 'Sucesso');
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.toastr.error('Erro ao fazer o upload da imagem', 'Erro!'); 
+      }
+    }).add(() => this.spinner.hide());
   }
 }

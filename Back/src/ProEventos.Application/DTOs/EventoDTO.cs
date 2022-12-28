@@ -22,7 +22,7 @@ namespace ProEventos.Application.DTOs
         [Display(Name = "quantidade de Pessoas")]
         public int QtdPessoas { get; set; }        
 
-        [RegularExpression(@".*\.(gif|jpe?g|bmp|png)$", ErrorMessage = "O nome do arquivo não é uma imagem válida (gif, jpg, )")]
+        //[RegularExpression(@".*\.(gif|jpe?g|bmp|png)$", ErrorMessage = "O nome do arquivo não é uma imagem válida (gif, jpg, )")]
         public string ImagemURL {get;set;}
 
         [Required(ErrorMessage = "O campo {0} é obrigatório"),
