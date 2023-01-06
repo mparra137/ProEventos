@@ -34,6 +34,9 @@ namespace ProEventos.Application.DTOs
         [Phone(ErrorMessage = "O número de {0} é inválido")]
         public string Telefone { get; set; }
 
+        public int UserId { get; set; }
+        public UserDto UserDto { get; set; }
+
         public IEnumerable<LoteDto> Lotes { get; set; }
 
         public IEnumerable<RedeSocialDto> RedesSociais { get; set; }
