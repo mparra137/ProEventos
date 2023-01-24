@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '@app/models/identity/User';
+import { AccountService } from '@app/services/account.service';
 
 @Component({
   selector: 'app-nav',
@@ -8,9 +10,19 @@ import { Router } from '@angular/router';
 })
 export class NavComponent implements OnInit {
   isCollapsed = true;
-  constructor(private router: Router) { }
+  currentUser!: string;
 
-  ngOnInit() {
+  constructor(private router: Router, public accountService: AccountService) { }
+
+  ngOnInit() {    
+  }
+
+  ngOnChanges(){
+    
+  }
+
+  public logout(): void{
+    this.accountService.logout();
   }
 
   public showMenu(): boolean{

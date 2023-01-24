@@ -11,7 +11,7 @@ export class ValidatorField {
                 return null;
             }    
 
-            if (control.value !== matchingControl.value){
+            if (control.value && control.value !== matchingControl.value){
                 matchingControl.setErrors({mustMatch: true});
             } else {
                 matchingControl.setErrors(null);

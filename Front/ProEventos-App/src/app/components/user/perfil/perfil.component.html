@@ -1,35 +1,34 @@
 <app-titulo [titulo]="'Perfil'"></app-titulo>
 <div class="card rounded shadow-sm">
-    <form [formGroup]="form">
+    <form [formGroup]="form" (ngSubmit)="updateUser()">
         <div class="row p-3">
             <div class="col-lg-3 pt-1">
                 <div class="card mb-3">
                     <div class="card-header"></div>
                     <div class="d-flex align-self-center pt-3">
-                        <a>
-                            <img
-                            src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R"
-                            name="aboutme" width="120" height="120" class="rounded-circle">
+                        <input type="file" #file style="display: none;" class="form-control" (change)="uploadImage($event)">
+                        <a>                                       
+                            <img [src]="imagemURL" tooltip="Clique aqui para alterar a imagem" name="aboutme" width="120" height="120" class="rounded-circle" (click)="file.click()">
                         </a>
+                        <!-- src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" -->                
                     </div>
                     <div class="card-body">
-                        <div class="h4 text-center mb-3">@UserName</div>
-                        <div class="h7 text-bold pb-1"><b>Nome:</b> Miracles Lee Cross</div>
+                        <div class="h4 text-center mb-3">{{'@'+f.userName.value}}</div>
+                        <div class="h7 text-bold pb-1"><b>Nome:</b> {{f.primeiroNome.value + ' ' + f.ultimoNome.value}}</div>
                         <div class="h7">
-                            Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
-                            etc.
+                            {{f.descricao.value}}
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-6 text-center border-right">
-                                    <div class="h5">1342</div>
-                                    <div class="h6 text-muted">Eventos Ministrados</div>
+                                    <div class="h5">0</div>
+                                    <div class="h6 text-muted">Meus Eventos Criados</div>
                                 </div>
                                 <div class="col-6 text-center">
-                                    <div class="h5">1342</div>
-                                    <div class="h6 text-muted">Eventos Participados</div>
+                                    <div class="h5">0</div>
+                                    <div class="h6 text-muted">Eventos como Participante</div>
                                 </div>
                             </div>
                         </li>
@@ -48,14 +47,14 @@
                         [ngClass]="{'is-invalid': f.titulo.errors && f.titulo.touched}" 
                         formControlName="titulo">
                             <option value=""></option>
-                            <option value="0">Não Quero</option>
-                            <option value="Senhorita">Tecnólogo(a)</option>
-                            <option value="Senhorita">Bacharel</option>
-                            <option value="Senhorita">Especialista</option>
-                            <option value="Senhorita">Pós Graduado(a)</option>
-                            <option value="Senhorita">Mestre</option>
-                            <option value="Senhorita">Doutor(a)</option>
-                            <option value="Senhorita">Pós Doc</option>
+                            <option value="NaoInformado">Não Informado</option>
+                            <option value="Tecnologo">Tecnólogo(a)</option>
+                            <option value="Bacharel">Bacharel</option>
+                            <option value="Especialista">Especialista</option>
+                            <option value="PosGraduado">Pós Graduado(a)</option>
+                            <option value="Mestrado">Mestre</option>
+                            <option value="Doutorado">Doutor(a)</option>
+                            <option value="PosDoutorado">Pós Doc</option>
                         </select>
                         <span class="invalid-feedback">Informar o Título</span>
                     </div>
@@ -89,8 +88,8 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <label>Telefone</label>
-                        <input type="text" class="form-control" formControlName="telefone" 
-                        [ngClass]="{'is-invalid': f.telefone.errors && f.telefone.touched}"
+                        <input type="text" class="form-control" formControlName="phoneNumber" 
+                        [ngClass]="{'is-invalid': f.phoneNumber.errors && f.phoneNumber.touched}"
                         placeholder="(000) 90000-0000" />
                         <span class="invalid-feedback">Telefone é obrigatório</span>
                     </div>
@@ -98,18 +97,18 @@
                         <label>Função</label>
                         <select class="form-control form-select" formControlName="funcao"
                         [ngClass]="{'is-invalid': f.funcao.errors && f.funcao.touched}" >
-                            <option value=""></option>
+                            <option value="NaoInformado">Não Informado</option>
                             <option value="Participante">Participante</option>
                             <option value="Palestrante">Palestrante</option>
                         </select>
                         <span class="invalid-feedback">Informar a Função</span>
                     </div>
-                    <form-group class="col-12">
+                    <div class="form-group col-12">
                         <label>Descrição</label>
                         <input type="text" class="form-control" formControlName="descricao" 
                         [ngClass]="{'is-invalid': f.descricao.errors && f.descricao.touched}"/>
                         <span class="invalid-feedback">Preencher a Descrição</span>
-                    </form-group>
+                    </div>
                 </div>
                 <div>
                     <h3 class="pt-3 border-bottom">Mudar Senha</h3>
@@ -118,16 +117,16 @@
                 <div class="form-row">
                     <div class="form-group col-sm">
                         <label>Senha</label>
-                        <input type="password" class="form-control" formControlName="senha" 
-                        [ngClass]="{'is-invalid': f.senha.errors}"
+                        <input type="password" class="form-control" formControlName="password" 
+                        [ngClass]="{'is-invalid': f.password.errors && f.password.touched}"
                         />
                         <span class="invalid-feedback">Senha deve ter no minimo 6 caracteres</span> 
                     </div>
                     <div class="form-group col-sm">
                         <label>Confirmar Senha</label>
-                        <input type="password" class="form-control" formControlName="confirmaSenha"
-                        [ngClass]="{'is-invalid': f.confirmaSenha.errors && f.confirmaSenha.touched}" />
-                        <span *ngIf="f.confirmaSenha.errors?.mustMatch && f.confirmaSenha.touched" class="invalid-feedback">Confirmação de senha não confere</span>
+                        <input type="password" class="form-control" formControlName="confirmPassword"
+                        [ngClass]="{'is-invalid': f.confirmPassword.errors && f.confirmPassword.touched}" />
+                        <span *ngIf="f.confirmPassword.errors?.mustMatch && f.confirmPassword.touched" class="invalid-feedback">Confirmação de senha não confere</span>
                     </div>
                 </div>
             </div>
@@ -137,7 +136,7 @@
                 <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm($event)">
                     Cancelar Alteração
                 </button>
-                <button class="btn btn-success" [disabled]="!form.valid">
+                <button class="btn btn-success" [disabled]="!form.valid" type="submit">
                     <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
                     Salvar Alteração
                 </button>
@@ -145,3 +144,5 @@
         </div>
     </form>
 </div>
+
+<br>

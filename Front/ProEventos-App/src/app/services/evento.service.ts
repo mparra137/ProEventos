@@ -1,15 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Evento } from '@app/models/Evento';
 import { take } from 'rxjs';
 import { environment } from '@environments/environment';
 
-@Injectable(
-//  {providedIn: 'root'}
-)
+@Injectable()
 export class EventoService {
-  baseURL = environment.apiURL + 'api/eventos';
+  baseURL = environment.apiURL + 'api/eventos';  
   
   constructor(private http: HttpClient) { }
 

@@ -9,6 +9,8 @@ using ProEventos.Application.Contratos;
 using ProEventos.Application.DTOs;
 using System.Security.Claims;
 using ProEventos.API.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace ProEventos.API.Controllers
 {
@@ -19,9 +21,11 @@ namespace ProEventos.API.Controllers
     {
         private readonly IAccountService accountService;
         private readonly ITokenService tokenService;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public AccountController(IAccountService accountService, ITokenService tokenService)
+        public AccountController(IAccountService accountService, ITokenService tokenService, IWebHostEnvironment hostEnvironment)
         {
+            this.hostEnvironment = hostEnvironment;
             this.accountService = accountService;
             this.tokenService = tokenService;
         }
@@ -51,8 +55,13 @@ namespace ProEventos.API.Controllers
                     return BadRequest("Usuário já existe");               
 
                 var user = await accountService.CreateAccountAsync(userDto);
-                if (user != null)
-                    return Ok(user);
+                if (user != null)                    
+                    return Ok( new{
+                        userName = user.UserName,
+                        PrimeiroNome = user.PrimeiroNome,
+                        token = tokenService.CreateToken(user).Result
+                    });
+                
 
                 return BadRequest("Usuário não criado. Tente novamente mais tarde.");
             }
@@ -93,7 +102,12 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var user = await accountService.GetUserByUserNameAsync(User.GetUserName());
+                var userName = User.GetUserName();
+                //Avoid updating the wrong user by another user
+                if (userUpdate.UserName != userName)
+                    return Unauthorized("Usuário inválido");    
+
+                var user = await accountService.GetUserByUserNameAsync(userName);
                 if (user == null) return Unauthorized("Usuário inválido");                   
 
                 var userReturn = await accountService.UpdateAccount(userUpdate);
@@ -105,6 +119,55 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar atualizar o usuário. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage() {
+            try
+            {
+                var userName = User.GetUserName();
+                var user = await accountService.GetUserByUserNameAsync(userName);
+                if (user == null) return BadRequest();
+
+                var file = Request.Form.Files[0];
+                if (file.Length > 0){
+                    if (user.imagemURL != null)
+                        DeleteImage(user.imagemURL);
+                    user.imagemURL = await SaveImage(userName, file);                                 
+                }
+                var userRetorno = await this.accountService.UpdateAccount(user);
+
+                return Ok(userRetorno);
+            }
+            catch (Exception ex)
+            {                
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Erro: {ex.Message}");
+            }
+           
+        }
+
+        [NonAction]
+        public async Task<string> SaveImage(string userName, IFormFile file){
+            //var fileName = new String(Path.GetFileNameWithoutExtension(file.FileName).Take(10).ToArray()).Replace(' ', '-');
+
+            var fileName = $"{userName}{DateTime.UtcNow.ToString("yyyymmddssfff")}{Path.GetExtension(file.FileName)}";
+
+            var filePath = Path.Combine(this.hostEnvironment.ContentRootPath, @"Resources/Images/Users", fileName);
+
+            using ( FileStream stream = new FileStream(filePath, FileMode.Create)){
+                await file.CopyToAsync(stream);                
+            }
+
+            return fileName;
+        }
+
+
+        [NonAction]
+        public void DeleteImage(string fileName){
+            var filePath = Path.Combine(this.hostEnvironment.ContentRootPath, @"Resources/Images/Users", fileName);
+            if (System.IO.File.Exists(filePath)){
+                System.IO.File.Delete(filePath);
             }
         }
     }
