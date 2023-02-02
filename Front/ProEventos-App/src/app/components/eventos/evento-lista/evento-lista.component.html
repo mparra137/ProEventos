@@ -7,7 +7,7 @@
         <div class="input-group-prepend">
           <div class="input-group-text">Filtro:</div>
         </div>        
-        <input type="text" class="form-control mr-2" placeholder="Buscar" [(ngModel)]="filtroLista">    
+        <input type="text" class="form-control mr-2" placeholder="Filtrar por tema e local" (input)="filtrarEventos($event.target)">    
       </div>
     </div>
     <div>
@@ -36,8 +36,8 @@
         <th></th>
       </tr>
     </thead>
-    <tbody *ngIf="eventosFiltrados && eventosFiltrados.length">
-      <tr *ngFor="let evento of eventosFiltrados" (click)="DetalheEvento(evento.id)" style="cursor: pointer;">
+    <tbody *ngIf="eventos && eventos.length">
+      <tr *ngFor="let evento of eventos" (click)="DetalheEvento(evento.id)" style="cursor: pointer;">
         <td class="d-none d-md-table-cell">
           <img
             [collapse]="!showImg"
@@ -59,7 +59,7 @@
         </td>
       </tr>
     </tbody>
-    <tfoot *ngIf="!eventosFiltrados.length">
+    <tfoot *ngIf="!eventos.length">
       <tr>
         <td colspan="8" class="text-center">
           <h4>Nenhum Evento encontrado</h4>
@@ -67,6 +67,13 @@
       </tr>
     </tfoot>
   </table>
+  <div class="row">
+    <div class="col-xs-12 col-12 d-flex justify-content-center">
+      <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage" 
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+    </div>
+  </div>
 </div>
 
 <ng-template #template>

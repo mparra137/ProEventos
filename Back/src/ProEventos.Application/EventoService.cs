@@ -5,6 +5,8 @@ using ProEventos.Application.DTOs;
 using ProEventos.Domain;
 using ProEventos.Persistence.Contratos;
 using AutoMapper;
+using ProEventos.Persistence.Models;
+
 namespace ProEventos.Application
 {
     public class EventoService : IEventoService
@@ -85,14 +87,21 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<EventoDTO[]> GetAllEventosAsync(int userId, bool includePalestrantes = false)
+        public async Task<PageList<EventoDTO>> GetAllEventosAsync(int userId, PageParams pageParams, bool includePalestrantes = false)
         {
             try
             {
-                Evento[] eventos = await eventosPersist.GetAllEventosAsync( userId, includePalestrantes);
-                if (eventos == null) return Array.Empty<EventoDTO>();
+                //Evento[] eventos = await eventosPersist.GetAllEventosAsync( userId, includePalestrantes);
+                var eventos = await eventosPersist.GetAllEventosAsync( userId, pageParams, includePalestrantes);
 
-                var resultado = mapper.Map<EventoDTO[]>(eventos);
+                if (eventos == null) return null;
+
+                var resultado = mapper.Map<PageList<EventoDTO>>(eventos);
+
+                resultado.CurrentPage = eventos.CurrentPage;
+                resultado.PageSize = eventos.PageSize;
+                resultado.TotalPages = eventos.TotalPages;
+                resultado.TotalCount = eventos.TotalCount;
 
                 return resultado;
             }
@@ -102,6 +111,7 @@ namespace ProEventos.Application
             }
         }
 
+        /*
         public async Task<EventoDTO[]> GetAllEventosByTemaAsync(int userId, string tema, bool includePalestrantes = false)
         {
             try
@@ -118,7 +128,7 @@ namespace ProEventos.Application
                 throw new Exception(ex.Message);
             }
         }
-
+        */
         public async Task<EventoDTO> GetEventoByIdAsync( int userId, int eventoId, bool includePalestrantes = false)
         {
             try

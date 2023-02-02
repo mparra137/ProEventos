@@ -11,6 +11,7 @@ using ProEventos.Application.Contratos;
 using ProEventos.Application.DTOs;
 using ProEventos.Domain;
 using ProEventos.API.Extensions;
+using ProEventos.Persistence.Models;
 
 
 namespace ProEventos.API.Controllers
@@ -31,28 +32,15 @@ namespace ProEventos.API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery]PageParams pageParams)
         {
             try
             {
-                 var eventos = await eventoService.GetAllEventosAsync(User.GetUserId(),true);
+                 var eventos = await eventoService.GetAllEventosAsync(User.GetUserId(), pageParams, true);
                  //if (eventos == null) return NotFound("Nenhum Evento Encontrado");
-                 if (eventos == null) return NoContent();
+                 if (eventos == null) return NoContent();    
 
-                //List<EventoDTO> eventoRetorno = new List<EventoDTO>();
-
-                //foreach(Evento evento in eventos){
-                //    eventoRetorno.Add( new EventoDTO{
-                //        Id = evento.Id,
-                //        Local = evento.Local,
-                //        DataEvento = evento.DataEvento.ToString(),
-                //        Tema = evento.Tema,
-                //        QtdPessoas = evento.QtdPessoas,
-                //        ImagemURL = evento.ImagemURL,
-                //       Email = evento.Email,
-                //        Telefone = evento.Telefone
-                //    });
-                //}
+                 Response.AddPagination(eventos.CurrentPage, eventos.PageSize, eventos.TotalCount, eventos.TotalPages);            
 
                  return Ok(eventos);
             }
@@ -85,6 +73,7 @@ namespace ProEventos.API.Controllers
             }          
         }
 
+        /*
         [HttpGet("{tema}/tema")]
         public async Task<IActionResult> GetByTema(string tema)
         {
@@ -102,6 +91,7 @@ namespace ProEventos.API.Controllers
                                         $"Erro ao tentar recuperar o evento. Erro: {ex.Message}");
             }          
         }
+        */
 
 
         [HttpPost("upload-image/{eventoId}")]

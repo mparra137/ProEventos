@@ -11,6 +11,7 @@ import { BsDropdownModule} from 'ngx-bootstrap/dropdown'
 import { ModalModule } from  'ngx-bootstrap/modal'
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
 import { NgxCurrencyModule } from 'ngx-currency';
+import { PaginationModule} from 'ngx-bootstrap/pagination';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
@@ -79,7 +80,8 @@ defineLocale('pt-br', ptBrLocale);
     NgxSpinnerModule,
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
-    NgxCurrencyModule      
+    NgxCurrencyModule,
+    PaginationModule.forRoot()      
   ],
   providers: [EventoService, LoteService, AccountService,
               {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
