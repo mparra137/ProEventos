@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ProEventos.API.Helpers;
 
 namespace ProEventos.API
 {
@@ -83,11 +84,17 @@ namespace ProEventos.API
             services.AddScoped<IEventoPersist, EventoPersist>();
             services.AddScoped<ILotePersist, LotePersist>();
             services.AddScoped<IUserPersist, UserPersist>();
+            services.AddScoped<IPalestrantesPersist, PalestrantePersist>();
+            services.AddScoped<IRedeSocialPersist, RedeSocialPersist>();
             
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<ILoteService, LoteService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ITokenService, TokenService>();           
+            services.AddScoped<ITokenService, TokenService>();     
+            services.AddScoped<IPalestranteService, PalestranteService>();   
+            services.AddScoped<IRedeSocialService, RedeSocialService>(); 
+
+            services.AddScoped<IUtil, Util>();  
 
 
             services.AddCors();

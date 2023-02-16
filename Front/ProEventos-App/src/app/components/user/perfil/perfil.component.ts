@@ -105,4 +105,8 @@ export class PerfilComponent implements OnInit {
       }
     }).add(() => this.spinner.hide());
   }
+
+  public funcaoValue(event: any): void{
+    console.log(event.value);
+  }
 }

@@ -96,7 +96,7 @@
                     <div class="form-group col-sm">
                         <label>Função</label>
                         <select class="form-control form-select" formControlName="funcao"
-                        [ngClass]="{'is-invalid': f.funcao.errors && f.funcao.touched}" >
+                        [ngClass]="{'is-invalid': f.funcao.errors && f.funcao.touched}" (change)="funcaoValue($event.target)">
                             <option value="NaoInformado">Não Informado</option>
                             <option value="Participante">Participante</option>
                             <option value="Palestrante">Palestrante</option>
