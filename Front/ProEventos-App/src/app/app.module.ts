@@ -12,6 +12,7 @@ import { ModalModule } from  'ngx-bootstrap/modal'
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
 import { NgxCurrencyModule } from 'ngx-currency';
 import { PaginationModule} from 'ngx-bootstrap/pagination';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
@@ -22,6 +23,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { EventoService } from './services/evento.service';
 import { LoteService } from './services/lote.service';
 import { AccountService } from './services/account.service';
+import { RedesocialService } from './services/redesocial.service';
 
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 
@@ -41,12 +43,17 @@ import { RegistrationComponent } from './components/user/registration/registrati
 
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { HomeComponent } from './components/home/home.component';
+import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
+import { PalestranteListaComponent } from './components/palestrantes/palestrante-lista/palestrante-lista.component';
+import { PalestranteDetalheComponent } from './components/palestrantes/palestrante-detalhe/palestrante-detalhe.component';
+import { RedesSociaisComponent } from './components/redes-sociais/redes-sociais.component';
 
 defineLocale('pt-br', ptBrLocale);
 @NgModule({
   declarations: [
     AppComponent,
     PerfilComponent,
+    PerfilDetalheComponent,
     DashboardComponent,
     ContatosComponent,
     EventosComponent,
@@ -59,7 +66,10 @@ defineLocale('pt-br', ptBrLocale);
     UserComponent,
     LoginComponent,
     RegistrationComponent,
-    HomeComponent
+    HomeComponent,
+    PalestranteListaComponent,
+    PalestranteDetalheComponent,
+    RedesSociaisComponent
    ],
   imports: [
     BrowserModule,    
@@ -81,9 +91,10 @@ defineLocale('pt-br', ptBrLocale);
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
     NgxCurrencyModule,
-    PaginationModule.forRoot()      
+    PaginationModule.forRoot(),
+    TabsModule.forRoot() 
   ],
-  providers: [EventoService, LoteService, AccountService,
+  providers: [EventoService, LoteService, AccountService, RedesocialService,
               {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })

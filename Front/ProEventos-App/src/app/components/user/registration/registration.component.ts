@@ -16,7 +16,11 @@ export class RegistrationComponent implements OnInit {
   user = {} as User;
   public form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private toastr: ToastrService, private spinner: NgxSpinnerService, private router: Router) { }
+  constructor(private fb: FormBuilder, 
+    private accountService: AccountService, 
+    private toastr: ToastrService, 
+    private spinner: NgxSpinnerService, 
+    private router: Router) { }
 
   public get f(): any{
     return this.form.controls;
@@ -46,7 +50,11 @@ export class RegistrationComponent implements OnInit {
   public register(): void{
     this.spinner.show();
 
-    this.user = {...this.form.value}    
+    this.user = {...this.form.value}   
+    
+    if (this.f.funcao === 'Palestrante'){
+
+    }
     
     this.accountService.Register(this.user).subscribe({
       next: (result: any) => {        

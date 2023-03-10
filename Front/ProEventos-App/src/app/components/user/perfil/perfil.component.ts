@@ -20,68 +20,31 @@ export class PerfilComponent implements OnInit {
   public imagemURL!: string;
   public file!: File;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private spinner: NgxSpinnerService, private toatr: ToastrService) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private spinner: NgxSpinnerService, private toastr: ToastrService) { }
 
-  public get f(): any{
-    return this.form.controls;
+  //public get f(): any{
+  //  return this.form.controls;
+  //}
+
+  public get isPalestrante() : boolean{
+    return this.user.funcao === 'Palestrante';
   }
 
-  ngOnInit() {
-    this.validation();
-    this.getUser();
-    if (this.imagemURL == undefined){
-      this.imagemURL = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R";
+  ngOnInit(): void {
+    //if (this.imagemURL == undefined){
+      
+    //}
+  }    
+
+  public getUser(userProfile: UserProfile): void {    
+    this.user = userProfile;
+    
+    if (userProfile.imagemURL){
+      this.imagemURL = environment.apiURL + 'resources/images/users/' + userProfile.imagemURL;
+    } else {
+      this.imagemURL = "/assets/semImagem.png";//"https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R";
     }
   }
-
-  public validation(): void{
-    const formOptions: AbstractControlOptions = {
-      validators: ValidatorField.MustMatch('password', 'confirmPassword')
-    };
-
-    this.form = this.fb.group({
-      titulo: ['', [Validators.required]],      
-      userName: [''],
-      primeiroNome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      ultimoNome: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required]],
-      funcao: ['', [Validators.required]],
-      descricao: ['', [Validators.required]],
-      password: [''],
-      confirmPassword: ['']
-    }, formOptions);
-  }
-
-  public resetForm(event: Event): void{
-    event.preventDefault()
-    this.form.reset();
-  }
-
-  public getUser(): void{
-    this.accountService.getUser().subscribe((userProfile: UserProfile) => {
-      if (userProfile){
-        this.form.patchValue(userProfile);
-        this.imagemURL = environment.apiURL + 'resources/images/users/' + userProfile.imagemURL;
-      }
-    });
-  }
-
-  public updateUser(): void{
-    this.spinner.show();
-    this.user = {...this.form.value};
-    //console.log('Dados User:', this.user);
-    this.accountService.update(this.user).subscribe({
-      next: () => {
-        this.toatr.success('Usuário alterado com sucesso')
-      },
-      error: (error: any) => {
-        console.error(error);
-        this.toatr.error('Não foi possível alterar o usuário', 'Erro');
-      }
-    }).add(() => this.spinner.hide());
-  }
-
 
   public uploadImage(event: any): void {
     const reader = new FileReader();
@@ -97,16 +60,14 @@ export class PerfilComponent implements OnInit {
     this.accountService.uploadImage(this.file).subscribe({
       next: (result) => {
         console.log(result);
-        this.toatr.success('Imagem atualizada', 'Sucesso');
+        this.toastr.success('Imagem atualizada', 'Sucesso');
       },
       error: (error: any) => {
         console.error(error);
-        this.toatr.error('Falha ao tentar enviar imagem', 'Erro');
+        this.toastr.error('Falha ao tentar enviar imagem', 'Erro');
       }
     }).add(() => this.spinner.hide());
   }
 
-  public funcaoValue(event: any): void{
-    console.log(event.value);
-  }
+
 }

@@ -35,6 +35,7 @@ namespace ProEventos.Application
                     if (model.Id == 0) {
                         await AddRedeSocial(eventoId, model, true);
                     } else {
+                        model.EventoId = eventoId;
                         await UpdateRedeSocial(redesSociais, model);
                     }
                 }
@@ -60,6 +61,7 @@ namespace ProEventos.Application
                     if (model.Id == 0){
                         await AddRedeSocial(palestranteId, model, false);
                     } else {
+                        model.PalestranteId = palestranteId;
                         await UpdateRedeSocial(redesSociais, model);
                     }
                 }

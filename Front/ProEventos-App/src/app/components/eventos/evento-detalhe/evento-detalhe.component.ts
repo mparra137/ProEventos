@@ -20,7 +20,7 @@ import { environment } from '@environments/environment';
 })
 export class EventoDetalheComponent implements OnInit {
 
-  private eventoId: number = 0
+  public eventoId: number = 0
   public form!: FormGroup;
   public evento = {} as Evento;
   private estadoSalvar: string = 'post';

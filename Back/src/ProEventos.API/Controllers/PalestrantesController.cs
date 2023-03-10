@@ -31,7 +31,7 @@ namespace ProEventos.API.Controllers
                 var palestrantes = await palestranteService.GetAllPalestrantesAsync(pageParams, true);
                 if (palestrantes == null) return NoContent();
 
-                Response.AddPagination(palestrantes.CurrentPage, palestrantes.PageSize, palestrantes.Count, palestrantes.TotalCount);
+                Response.AddPagination(palestrantes.CurrentPage, palestrantes.PageSize, palestrantes.TotalCount, palestrantes.TotalPages);
 
                 return Ok(palestrantes);
             }

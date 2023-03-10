@@ -134,10 +134,8 @@ namespace ProEventos.API.Controllers
                 if (user == null) return BadRequest();
 
                 var file = Request.Form.Files[0];
-                if (file.Length > 0){
-                    if (user.imagemURL != null)
-                        util.DeleteImage(user.imagemURL, destino);
-                        
+                if (file.Length > 0){                    
+                    util.DeleteImage(user.imagemURL, destino);                        
                     user.imagemURL = await util.SaveImage(file, destino, userName);//await SaveImage(userName, file);                                 
                 }
                 var userRetorno = await this.accountService.UpdateAccount(user);
